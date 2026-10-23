@@ -1,0 +1,855 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EstateIQ - Home Price Prediction</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    min-height: 100vh;
+    color: #f5f7ff;
+    background:
+        radial-gradient(circle at 10% 10%, #263d86, transparent 40%),
+        radial-gradient(circle at 90% 40%, #42246d, transparent 35%),
+        linear-gradient(135deg, #080d20, #111b3b, #15102f);
+    overflow-x: hidden;
+}
+
+.wrapper {
+    width: min(1100px, 92%);
+    margin: auto;
+    padding-bottom: 30px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 0;
+    gap: 10px;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 900;
+}
+
+.logo span {
+    color: #52ead7;
+}
+
+.nav-badge {
+    border: 1px solid #ffffff35;
+    padding: 9px 13px;
+    border-radius: 30px;
+    font-size: 12px;
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    align-items: center;
+    padding: 30px 0;
+}
+
+.hero h1 {
+    font-size: clamp(35px, 5vw, 60px);
+    line-height: 1.1;
+    margin: 20px 0;
+}
+
+.gradient {
+    background: linear-gradient(90deg, #fff, #83bdff, #bca2ff);
+    color: transparent;
+    background-clip: text;
+}
+
+.hero p {
+    color: #b8c5e7;
+    line-height: 1.8;
+}
+
+.badge {
+    display: inline-block;
+    color: #52ead7;
+    border: 1px solid #52ead755;
+    padding: 9px 13px;
+    border-radius: 30px;
+    font-size: 12px;
+}
+
+.house-area {
+    height: 280px;
+    display: grid;
+    place-items: center;
+    perspective: 800px;
+}
+
+.house {
+    position: relative;
+    width: 190px;
+    height: 190px;
+    animation: float 4s infinite ease-in-out;
+    filter: drop-shadow(15px 20px 25px #0007);
+}
+
+.roof {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 95px solid transparent;
+    border-right: 95px solid transparent;
+    border-bottom: 85px solid #9380ff;
+}
+
+.house-body {
+    position: absolute;
+    top: 80px;
+    left: 28px;
+    width: 135px;
+    height: 105px;
+    background: linear-gradient(135deg, #fff, #91b4ff);
+    border: 3px solid white;
+    box-shadow: 15px 15px 0 #6595ff55;
+}
+
+.house-window {
+    position: absolute;
+    top: 18px;
+    width: 28px;
+    height: 30px;
+    background: #52ead7;
+    border: 3px solid white;
+}
+
+.house-window.one { left: 12px; }
+.house-window.two { right: 12px; }
+
+.door {
+    position: absolute;
+    bottom: 0;
+    left: 49px;
+    width: 35px;
+    height: 55px;
+    background: #24345d;
+    border: 3px solid white;
+}
+
+@keyframes float {
+    50% { transform: translateY(-15px) rotateY(8deg); }
+}
+
+.project-info {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 18px;
+    margin: 15px 0 25px;
+    background: #ffffff0b;
+    border: 1px solid #ffffff22;
+    border-radius: 16px;
+    font-size: 13px;
+}
+
+.panel {
+    padding: clamp(20px, 4vw, 35px);
+    border: 1px solid #ffffff25;
+    border-radius: 24px;
+    background: linear-gradient(145deg, #19244eed, #101831ed);
+    box-shadow: 0 25px 70px #0005;
+    backdrop-filter: blur(15px);
+}
+
+h2 {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+.description {
+    text-align: center;
+    color: #b8c5e7;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+input, select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #ffffff30;
+    background: #0b1431;
+    color: white;
+    font-size: 15px;
+    outline: none;
+}
+
+select option {
+    background: #101a3b;
+}
+
+input:focus, select:focus {
+    border-color: #6595ff;
+    box-shadow: 0 0 0 3px #6595ff22;
+}
+
+.hint {
+    font-size: 11px;
+    color: #a3b1d8;
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .25s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+}
+
+.predict-btn {
+    flex: 1;
+    color: #09132c;
+    background: linear-gradient(100deg, #70f0dc, #78a8ff, #b19aff);
+}
+
+.reset-btn, .back-btn {
+    color: white;
+    background: #ffffff12;
+    border: 1px solid #ffffff25;
+}
+
+.result {
+    display: none;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #143c4a, #24265b);
+    border: 1px solid #52ead766;
+}
+
+.result.show {
+    display: block;
+    animation: appear .5s ease;
+}
+
+.result-label {
+    color: #52ead7;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.price {
+    font-size: clamp(30px, 5vw, 43px);
+    font-weight: 900;
+    margin: 12px 0;
+    overflow-wrap: anywhere;
+}
+
+.details {
+    color: #d3defb;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.note {
+    color: #b2bfdf;
+    font-size: 11px;
+    line-height: 1.7;
+    margin-top: 15px;
+}
+
+/* LOCATION EXPLORER WINDOW */
+
+.location-window {
+    display: none;
+    margin-top: 28px;
+}
+
+.location-window.show {
+    display: block;
+    animation: appear .6s ease;
+}
+
+.location-heading {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.location-heading .eyebrow {
+    color: #52ead7;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.location-heading h2 {
+    margin-top: 12px;
+}
+
+.location-heading p {
+    color: #b8c5e7;
+    line-height: 1.8;
+    font-size: 14px;
+}
+
+.location-layout {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 20px;
+}
+
+.map-card {
+    min-height: 340px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #8eabff55;
+    border-radius: 20px;
+    background:
+        linear-gradient(25deg, transparent 48%, #52ead755 49%, #52ead755 50%, transparent 51%),
+        linear-gradient(145deg, transparent 45%, #8caaff66 46%, #8caaff66 47%, transparent 48%),
+        linear-gradient(135deg, #162a4b, #182047, #30205a);
+    background-size: 170px 130px, 200px 160px, auto;
+}
+
+.map-top {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.map-chip {
+    background: #07132bdd;
+    padding: 9px 11px;
+    border-radius: 30px;
+    border: 1px solid #ffffff30;
+    font-size: 11px;
+}
+
+.map-pin {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    font-size: 58px;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 10px 12px #0008);
+    animation: pinBounce 1.6s infinite ease-in-out;
+}
+
+@keyframes pinBounce {
+    50% { transform: translate(-50%, -65%); }
+}
+
+.map-label {
+    position: absolute;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: #0a1539e8;
+    border: 1px solid #ffffff25;
+    font-size: 11px;
+}
+
+.map-label.one { top: 30%; left: 7%; }
+.map-label.two { top: 65%; right: 7%; }
+.map-label.three { bottom: 8%; left: 15%; }
+
+.location-details {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.location-card {
+    padding: 17px;
+    background: #ffffff09;
+    border: 1px solid #ffffff22;
+    border-radius: 16px;
+    transition: .3s;
+}
+
+.location-card:hover {
+    transform: translateY(-4px);
+    border-color: #52ead7;
+    box-shadow: 0 12px 25px #0003;
+}
+
+.location-card .emoji {
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.location-card small {
+    display: block;
+    color: #aebce0;
+    font-size: 11px;
+    margin-bottom: 6px;
+}
+
+.location-card strong {
+    font-size: 18px;
+    overflow-wrap: anywhere;
+}
+
+.location-card p {
+    color: #b8c5e7;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-top: 7px;
+}
+
+.location-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.location-actions button {
+    flex: 1;
+}
+
+.map-btn {
+    color: #09132c;
+    background: linear-gradient(100deg, #70f0dc, #78a8ff);
+}
+
+footer {
+    text-align: center;
+    padding: 30px 10px;
+    color: #a4b2d8;
+    font-size: 12px;
+    line-height: 1.9;
+}
+
+footer strong { color: white; }
+
+@keyframes appear {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media(max-width: 800px) {
+    .hero, .location-layout {
+        grid-template-columns: 1fr;
+    }
+    .house-area { height: 240px; }
+}
+
+@media(max-width: 560px) {
+    nav { padding: 18px 0; }
+    .logo { font-size: 17px; }
+    .nav-badge { font-size: 9px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .button-group, .location-actions {
+        flex-direction: column;
+    }
+    .project-info { justify-content: flex-start; }
+    .map-card { min-height: 290px; }
+    h2 { font-size: 26px; }
+}
+
+@media(prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<nav>
+    <div class="logo">⌂ ESTATE<span>IQ</span></div>
+    <div class="nav-badge">✦ SMART PROPERTY ESTIMATOR</div>
+</nav>
+
+<section class="hero">
+    <div>
+        <div class="badge">✧ REAL ESTATE, REIMAGINED</div>
+        <h1>Find your home's<br>
+            <span class="gradient">estimated value.</span>
+        </h1>
+        <p>
+            Enter your home's details and discover an instant
+            demo estimate with an attractive interactive dashboard.
+        </p>
+    </div>
+
+    <div class="house-area">
+        <div class="house">
+            <div class="roof"></div>
+            <div class="house-body">
+                <div class="house-window one"></div>
+                <div class="house-window two"></div>
+                <div class="door"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="project-info">
+    <span>🎓 <b>Project:</b> Home Price Prediction</span>
+    <span>👨‍💻 <b>Developer:</b> Swarup Hiralkar</span>
+    <span>📘 <b>Guide:</b> Mr. Abhijit Wanare</span>
+</div>
+
+<main class="panel" id="formWindow">
+    <h2>Property <span class="gradient">Details</span></h2>
+    <p class="description">
+        Enter your property information to calculate its estimated price.
+    </p>
+
+    <form id="priceForm">
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label for="location">📍 Property Location</label>
+                <select id="location" required>
+                    <option value="">Choose a city</option>
+                    <option value="1">Akola</option>
+                    <option value="2">Pune</option>
+                    <option value="3">Mumbai</option>
+                    <option value="4">Nagpur</option>
+                    <option value="5">Nashik</option>
+                    <option value="6">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="area">📐 Area (Square Feet)</label>
+                <input type="number" id="area"
+                    placeholder="e.g. 1200" min="100"
+                    max="50000" required>
+                <span class="hint">Enter 100 to 50,000 sq. ft.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="bedrooms">🛏️ Bedrooms</label>
+                <select id="bedrooms" required>
+                    <option value="">Choose bedrooms</option>
+                    <option value="1">1 BHK</option>
+                    <option value="2">2 BHK</option>
+                    <option value="3">3 BHK</option>
+                    <option value="4">4 BHK</option>
+                    <option value="5">5 BHK or more</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bathrooms">🛁 Bathrooms</label>
+                <select id="bathrooms" required>
+                    <option value="">Choose bathrooms</option>
+                    <option value="1">1 Bathroom</option>
+                    <option value="2">2 Bathrooms</option>
+                    <option value="3">3 Bathrooms</option>
+                    <option value="4">4 Bathrooms</option>
+                    <option value="5">5 or more</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="floors">🏢 Number of Floors</label>
+                <select id="floors" required>
+                    <option value="">Choose floors</option>
+                    <option value="1">1 Floor</option>
+                    <option value="2">2 Floors</option>
+                    <option value="3">3 Floors</option>
+                    <option value="4">4 Floors</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="age">🗓️ Property Age</label>
+                <select id="age" required>
+                    <option value="">Choose property age</option>
+                    <option value="0">New Property</option>
+                    <option value="5">1–5 Years</option>
+                    <option value="10">6–10 Years</option>
+                    <option value="20">More than 10 Years</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="button-group">
+            <button class="predict-btn" type="submit">
+                ✨ Predict Estimated Price
+            </button>
+            <button class="reset-btn" type="reset">
+                Reset Form ↺
+            </button>
+        </div>
+    </form>
+
+    <section class="result" id="result" aria-live="polite">
+        <div class="result-label">YOUR DEMO ESTIMATE</div>
+        <div class="price" id="price">₹0</div>
+        <p class="details" id="details"></p>
+        <p style="margin-top:12px;color:#52ead7;font-size:12px;">
+            ✓ Calculation Complete
+        </p>
+        <p class="note">
+            This is a rule-based demo estimate, not a verified market
+            valuation or a trained machine-learning prediction.
+            City rates are sample values.
+        </p>
+    </section>
+</main>
+
+<!-- NEW WINDOW: LOCATION EXPLORER -->
+<section class="panel location-window" id="locationWindow">
+
+    <div class="location-heading">
+        <div class="eyebrow">✦ YOUR PROPERTY LOCATION</div>
+        <h2>Explore <span class="gradient">Your Area</span> 📍</h2>
+        <p>
+            Your estimated price is ready! Explore your selected city
+            and see your property summary below.
+        </p>
+    </div>
+
+    <div class="location-layout">
+
+        <div class="map-card">
+            <div class="map-top">
+                <span class="map-chip">🗺️ LOCATION PREVIEW</span>
+                <span class="map-chip" id="mapCity">📍 Selected City</span>
+            </div>
+
+            <span class="map-label one">🏪 Local Market</span>
+            <span class="map-label two">🌳 Green Zone</span>
+            <span class="map-label three">🚏 Main Road</span>
+            <div class="map-pin">📍</div>
+        </div>
+
+        <div class="location-details">
+
+            <div class="location-card">
+                <div class="emoji">🏙️</div>
+                <small>SELECTED CITY</small>
+                <strong id="locationCity">City Name</strong>
+                <p>Your selected property location.</p>
+            </div>
+
+            <div class="location-card">
+                <div class="emoji">🏠</div>
+                <small>PROPERTY PROFILE</small>
+                <strong id="locationBhk">2 BHK Home</strong>
+                <p id="locationSummary">Property details</p>
+            </div>
+
+            <div class="location-card">
+                <div class="emoji">💰</div>
+                <small>ESTIMATED VALUE</small>
+                <strong id="locationPrice">₹0</strong>
+                <p>Estimated value using demo calculation.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="location-actions">
+        <button class="map-btn" type="button" id="mapButton">
+            🗺️ Open Map Search
+        </button>
+        <button class="back-btn" type="button" id="backButton">
+            ↩ Back to Property Details
+        </button>
+    </div>
+
+    <p class="note">
+        The map design is an illustration, not a live map.
+        Open Map Search will open the selected city in Google Maps.
+    </p>
+</section>
+
+<footer>
+    <strong>Home Price Prediction Project</strong><br>
+    Developed by Swarup Hiralkar<br>
+    Guided by Mr. Abhijit Wanare<br>
+    © 2026 · Educational Demonstration
+</footer>
+
+</div>
+
+<script>
+const form = document.getElementById("priceForm");
+const result = document.getElementById("result");
+const locationWindow = document.getElementById("locationWindow");
+
+const cityNames = {
+    1: "Akola",
+    2: "Pune",
+    3: "Mumbai",
+    4: "Nagpur",
+    5: "Nashik",
+    6: "Other"
+};
+
+// Sample rates for demonstration only.
+const locationRates = {
+    1: 3000,
+    2: 6500,
+    3: 12000,
+    4: 4500,
+    5: 4000,
+    6: 2500
+};
+
+let selectedCity = "";
+
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const locationValue = document.getElementById("location").value;
+    const area = Number(document.getElementById("area").value);
+    const bedrooms = Number(document.getElementById("bedrooms").value);
+    const bathrooms = Number(document.getElementById("bathrooms").value);
+    const floors = Number(document.getElementById("floors").value);
+    const age = Number(document.getElementById("age").value);
+
+    if (
+        !locationValue ||
+        !Number.isFinite(area) || area < 100 || area > 50000 ||
+        !bedrooms || !bathrooms || !floors ||
+        !Number.isFinite(age) || age < 0
+    ) {
+        alert("Please enter valid property details.");
+        return;
+    }
+
+    selectedCity = cityNames[locationValue];
+
+    const rate = locationRates[locationValue];
+    const bedroomFactor = 1 + (bedrooms - 1) * 0.04;
+    const bathroomFactor = 1 + (bathrooms - 1) * 0.02;
+    const floorFactor = 1 + (floors - 1) * 0.01;
+    const ageFactor = Math.max(0.70, 1 - age * 0.01);
+
+    const estimatedPrice =
+        area * rate * bedroomFactor *
+        bathroomFactor * floorFactor * ageFactor;
+
+    const formattedPrice = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 0
+    }).format(estimatedPrice);
+
+    // First window: show estimated price.
+    document.getElementById("price").textContent = formattedPrice;
+
+    document.getElementById("details").textContent =
+        "📍 Location: " + selectedCity +
+        " | 📐 Area: " + area.toLocaleString("en-IN") + " sq. ft." +
+        " | 🛏️ Bedrooms: " + bedrooms +
+        " | 🛁 Bathrooms: " + bathrooms +
+        " | 🏢 Floors: " + floors +
+        " | 🗓️ Age: " + (age === 0 ? "New Property" : age + " years approx.");
+
+    result.classList.add("show");
+
+    // Second window: update location explorer details.
+    document.getElementById("mapCity").textContent = "📍 " + selectedCity;
+    document.getElementById("locationCity").textContent = selectedCity;
+    document.getElementById("locationBhk").textContent = bedrooms + " BHK Home";
+
+    document.getElementById("locationSummary").textContent =
+        area.toLocaleString("en-IN") + " sq. ft. • " +
+        bathrooms + (bathrooms === 1 ? " bathroom • " : " bathrooms • ") +
+        floors + (floors === 1 ? " floor" : " floors") +
+        " • " + (age === 0 ? "New property" : age + " years old");
+
+    document.getElementById("locationPrice").textContent = formattedPrice;
+
+    // Open the new window visually after the estimate.
+    locationWindow.classList.add("show");
+
+    setTimeout(function() {
+        locationWindow.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }, 150);
+});
+
+// Reset both result sections.
+form.addEventListener("reset", function() {
+    result.classList.remove("show");
+    locationWindow.classList.remove("show");
+});
+
+// Go back to the property form.
+document.getElementById("backButton").addEventListener("click", function() {
+    document.getElementById("formWindow").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+});
+
+// Open Google Maps for the selected city.
+document.getElementById("mapButton").addEventListener("click", function() {
+    if (!selectedCity || selectedCity === "Other") {
+        alert("Please choose a specific city to search on the map.");
+        return;
+    }
+
+    const mapUrl =
+        "https://www.google.com/maps/search/?api=1&query=" +
+        encodeURIComponent(selectedCity);
+
+    window.open(mapUrl, "_blank", "noopener,noreferrer");
+});
+</script>
+
+</body>
+</html>
